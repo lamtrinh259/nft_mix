@@ -7,6 +7,7 @@ from scripts.helpful_scripts import (
     listen_for_event,
 )
 import time
+from web3 import Web3
 
 
 def test_can_create_advanced_collectible_integration(
@@ -20,16 +21,17 @@ def test_can_create_advanced_collectible_integration(
         get_contract("vrf_coordinator").address,
         get_contract("link_token").address,
         get_keyhash,
-        {"from": get_account()},
+        chainlink_fee,
+        {"from": get_account(), "gasPrice": Web3.toWei("25", "gwei")},
     )
     get_contract("link_token").transfer(
         advanced_collectible.address, chainlink_fee * 3, {"from": get_account()}
     )
     # Act
-    advanced_collectible.createCollectible("None", {"from": get_account()})
-    # time.sleep(75)
+    advanced_collectible.createCollectible({"from": get_account()})
+    time.sleep(75)
     listen_for_event(
-        advanced_collectible, "ReturnedCollectible", timeout=200, poll_interval=10
+        advanced_collectible, "breedAssigned", timeout=200, poll_interval=10
     )
     # Assert
     assert advanced_collectible.tokenCounter() > 0

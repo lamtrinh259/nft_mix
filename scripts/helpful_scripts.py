@@ -17,7 +17,7 @@ import time
 # Set a default gas price
 from brownie.network import priority_fee
 
-OPENSEA_FORMAT = "https://testnets.opensea.io/assets/{}/{}"
+OPENSEA_URL = "https://testnets.opensea.io/assets/{}/{}"
 NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["hardhat", "development", "ganache"]
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS + [
     "mainnet-fork",
@@ -123,7 +123,7 @@ def deploy_mocks(decimals=18, initial_value=2000):
     Use this script if you want to deploy mocks to a testnet
     """
     # Set a default gas price
-    priority_fee("1 gwei")
+    # priority_fee("1 gwei")
     print(f"The active network is {network.show_active()}")
     print("Deploying Mocks...")
     account = get_account()
@@ -136,7 +136,7 @@ def deploy_mocks(decimals=18, initial_value=2000):
     print(f"Deployed to {mock_price_feed.address}")
     print("Deploying Mock VRFCoordinator...")
     mock_vrf_coordinator = VRFCoordinatorMock.deploy(
-        link_token.address, {"from": account, "gas_price": chain.base_fee}
+        link_token.address, {"from": account}
     )
     print(f"Deployed to {mock_vrf_coordinator.address}")
 
